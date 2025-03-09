@@ -1,0 +1,3 @@
+datep () {
+	echo "$(date +"%b %d, %Y")"	# Print Date as Mon DD, YYYY
+}

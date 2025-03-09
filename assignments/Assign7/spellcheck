@@ -1,0 +1,46 @@
+spellcheck () {
+	files=( "$@" )		# Store the arguent files into a list
+	
+	if [ "${#files[@]}" -eq 0 ]; then		# If there are no files given, write to stderr and exit
+		echo "Usage: spellcheck filename" >&2
+		exit 1
+	else
+		touch temp.txt
+		wordspath="/usr/share/dict/words"	# Path to words reference dictionary
+		words=( $(cat "$wordspath") )		# Store all the words into a list
+		for file in "${files[@]}"; do		# Iterate over the file list
+			if [ ! -f "$file" ]; then	
+				echo "Error: $file does not exist" >&2		# If file does not exist, write to stderr and skip to next file
+			else
+				grep -o -E "\w+" "$file" > temp.txt		# Extract all words from the file and write it into a temp file
+				fwords=( $(sort -f temp.txt) )			# Sort the words and make a list out of them
+				rm temp.txt
+				touch temp.txt					# Remake the temp file to mke the list case insensitive
+				for word in "${fwords[@]}"; do
+					echo "${word,,}" >> temp.txt		# Store the lowercase word into temp.txt
+				done
+				uwords=( $(sort -fu temp.txt) )			# Get only the unique entries
+				for word in "${uwords[@]}"; do			# Iterate over the words
+					for ref in "${words[@]}"; do
+						if [ "${word,,}" == "${ref,,}" ]; then		# Check lowercase matching of each word
+							break 2			# If word exists then break out of the two loops
+						fi
+					done
+					sfile="$file.spelling"			# If word doesn't exist then store it into this file
+					if [ ! -f "$sfile" ]; then
+						echo "Creating $sfile"
+					else
+						echo "Replacing $sfile"
+					fi
+					echo "$word" >> "$sfile"		
+				done
+				echo "Finished checking $file"
+				echo "Total words found: ${#fwords[@]}"		
+				echo "Total unique words found: ${#uwords[@]}"	# Print number of entries and number of unique entries	
+			fi
+		done
+		rm temp.txt		# Delete the temp file after everything
+	fi
+}
+
+

@@ -1,0 +1,4 @@
+(executable
+ (public_name sdf_6)
+ (name main)
+ (libraries sdf_6))

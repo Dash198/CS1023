@@ -1,0 +1,16 @@
+exp="$1"	# Store the word/regular expression to look for.
+filename="${2:-words}"	# Store the file name, or else use "words" as the default file to look into.
+
+grep -i "$exp" "$filename" > temp.txt 2> /dev/null	# Use the grep command for pattern matching and store the words into a temporary file, ignore any errors.
+
+words=($(sort -f temp.txt))	# Sort the words from the file, ignore case and store the sorted words into an array.
+len=${#words[@]}	# Store the length of the array.
+
+i=0	# Index variable.
+while [ $i -lt $len ]; 	# Iterate on the list.
+do
+	# Print the list elements into 4 columns. If we go out of bounds, empty strings will be printed instead.
+	printf "%-15s %-15s %-15s %-15s\n" "${words[$i]}" "${words[(($i+1))]}" "${words[(($i+2))]}" "${words[(($i+3))]}"
+	i=$((i+4))	# Increment the reference index by 4.
+done
+rm temp.txt	# Delete the temporary file at the end.

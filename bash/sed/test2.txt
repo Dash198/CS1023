@@ -1,0 +1,9 @@
+if (pqr)
+	boy1
+	b2
+fi
+
+if (xyz)
+	character1
+	character2
+fi

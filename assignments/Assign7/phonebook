@@ -1,0 +1,33 @@
+cmd="$1"	# Store the command to apply
+touch phonebook.csv	# Create the phonebook file if not already created
+
+if [ "$cmd" = "new" ]; then	# To add a new entry
+	fname="$2"
+	lname="$3"
+	number="$4"
+	echo "$fname $lname $number" >> phonebook.csv	# Add first name, last name and phone no. to phonebook.csv
+
+elif [ "$cmd" = "list" ]; then	# List all entries
+		awk '{print $1, $2, $3}' phonebook.csv > temp.txt	# Printing first to a temp file
+		if [ ! -s temp.txt ]; then
+			echo "phonebook is empty"		# Handling empty file case
+		else
+			cat temp.txt		# Printing everything else otherwise
+		fi
+		rm temp.txt		# Delete the empty file
+
+elif [ "$cmd" = "clear" ]; then	
+	rm phonebook.csv
+	touch phonebook.csv		# Delete and re-create the phonebook file
+
+elif [ "$cmd" = "remove" ]; then	# Remove entries of a specific person
+	fname="$2"
+	lname="$3"
+	awk -v fname="$fname" -v lname="$lname" '$1 != fname || $2 != lname' phonebook.csv >> temp.csv	# Move the entry to a temp file unless the name matches perfectly; then skip
+	mv temp.csv phonebook.csv	# Make the temp file the new phonebook file
+
+elif [ "$cmd" = "lookup" ]; then	# Looking up a specific person (implementing the optional behavior of printing only the phone numbers)
+	fname="$2"
+	lname="$3"			
+	awk -v fname="$fname" -v lname="$lname" '($1 == fname && $2 == lname) {print $3}' phonebook.csv	# Print only the phone number of the person whose name matches perfectly
+fi

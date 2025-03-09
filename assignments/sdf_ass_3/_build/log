@@ -1,0 +1,6 @@
+# dune init proj sdf_ass_3
+# OCAMLPARAM: unset
+# Shared cache: enabled-except-user-rules
+# Shared cache location: /home/devansh/.cache/dune/db
+# Workspace root: /home/devansh/Code/Ocaml/sdf_ass_3
+# Auto-detected concurrency: 16

@@ -1,0 +1,15 @@
+out_file="$1"	# Store the output file
+shift		# Shift the index of the arg list by one
+
+in_files=( "$@" )	# Add the remaining args into a list
+
+if [ -f "$out_file" ]; then		
+	echo "Error: Output file should not exist" >&2	# If file exists then write to stderr and exit
+	exit 1
+else
+	for file in ${in_files[@]}; do
+		cat "$file" >> temp.txt 2>>temp.txt		# Iterate over the files and write any errors to the temp output file
+	done
+	mv temp.txt "$out_file"					# Move the contents of the temp file to the output file
+	exit 0
+fi
