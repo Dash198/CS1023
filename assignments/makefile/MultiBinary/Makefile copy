@@ -1,0 +1,53 @@
+executables := math_ops string_ops data_ops all_ops
+
+math_src := src/mathop/main_math.c src/mathop/mathop.c
+string_src := src/stringop/main_string.c src/stringop/stringop.c
+data_src := src/dataop/dataop.c src/dataop/main_data.c
+
+math_depends := $(math_src) include/mathop.h
+string_depends := $(string_src) include/stringop.h
+data_depends := $(data_src) include/dataop.h
+
+all_src := src/mathop/mathop.c src/stringop/stringop.c src/dataop/dataop.c src/main.c
+all_depends := src/main.c src/mathop/mathop.c src/stringop/stringop.c src/dataop/dataop.c include/dataop.h include/stringop.h include/mathop.h
+
+CC := gcc
+CFLAGS := -Iinclude
+DEBUG_FLAG := -O2
+
+ifeq ($(DEBUG),1)
+	DEBUG_FLAG := -g -DDEBUG
+else 
+	DEBUG_FLAG := -O2
+endif
+
+all: $(executables)
+
+math_ops: $(math_depends)
+	$(CC) $(CFLAGS) $(DEBUG_FLAG) $(math_src) -o $@ 
+
+string_ops: $(string_depends)
+	$(CC) $(CFLAGS) $(DEBUG_FLAG) $(string_src) -o $@
+
+data_ops: $(data_depends)
+	$(CC) $(CFLAGS) $(DEBUG_FLAG) $(data_src) -o $@
+
+all_ops: $(all_depends)
+	$(CC) $(CFLAGS) $(DEBUG_FLAG) $(all_src) -o $@
+
+run_math: math_ops
+	./math_ops
+
+run_string: string_ops
+	./string_ops
+
+run_data: data_ops
+	./data_ops
+
+run_all_ops: all_ops
+	./all_ops
+
+clean:
+	rm -f $(executables)
+
+
