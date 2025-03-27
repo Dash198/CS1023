@@ -42,6 +42,7 @@ all_ops: $(all_objs)
 	$(CC) $^ -o $@ $(CFLAGS) $(DEBUG_FLAG)
 
 # Uses pattern matching for all .o targets whose prerequisites are their respective .c files.
+# This command compiles all those files which were modified after creating the .o file as well.
 %.o: %.c 
 	$(CC) -c $< -o $@ $(CFLAGS) $(DEBUG_FLAG) -MMD -MP
 # Above statement also creates a .d file which stores the header dependency.
